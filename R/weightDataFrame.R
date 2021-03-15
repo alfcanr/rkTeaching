@@ -1,13 +1,11 @@
 weightDataFrame <- function(data, freq){
-  if (ncol(data)<2) {
-    stop("The data frame must contain at least two variables.")
-  }
-  if (!is.numeric(data[["freq"]])) {
-    stop("The freq variable should contain frequencies and must be numeric.")
-  }
-  times <- as.integer(data[[freq]])
-  data[[freq]] <- NULL
-  result <- data[rep(seq_len(nrow(data)), times),]
+ reps <- data[[freq]]
+  data[[freq]] <- NULL 
+  m <- as.matrix(data)
+  result <- as.vector(m)
+  result <- matrix(rep(result,rep(reps,ncol(m))),sum(reps),ncol(m));
+  result <- as.data.frame(result);
+  colnames(result) <- colnames(data)
   return(result)
 }
 
