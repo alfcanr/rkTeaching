@@ -6,43 +6,45 @@
 	<help file="data_weighting.rkh"/>
 
 	<logic>
-		<connect governor="current_object" client="dataframe.available"/>
-		<connect governor="dataframe.available" client="selector.root"/>
-		<convert id="dataframeSelected" sources="dataframe.available" mode="notequals" standard=""/>
-		<connect governor="dataframeSelected" client="freq.enabled"/>
-	</logic>
-
-	<dialog label="Data weighting">
-		<row>
-			<varselector id="selector" label="Select data frame or variable"/>
+		<connect governor="current_object" client="dataframe.available" />
+		<connect governor="dataframe.available" client="selector.root" />
+	</logic>	
+		
+	<dialog label="Ponderar conjunto de datos" >
+		<row id="row_vars">
+			<varselector id="selector" label="Seleccionar conjunto de datos"/>
 			<column>
-				<varslot id="dataframe" label="Data frame to weight" source="selector" classes="data.frame" required="true"/>
-				<varslot id="freq" label="Weighting frequencies" source="selector" types="numeric" required="true"/>
-				<saveobject id="newDataframe" label="Save new data frame" initial="new.data.frame"/>
+				<varslot id="dataframe" label="Conjunto de datos a ponderar" source="selector" classes="data.frame" required="true" />
+				<varslot id="freq" label="Frecuencias de ponderación" source="selector" types="number" required="true" />
+				<saveobject id="save" label="Guardar conjunto de datos" initial="datos.nuevo" />
 			</column>
 		</row>
 	</dialog>
+	
+	<wizard label="Ponderar conjunto de datos">
+		<page id="page_data">
+			<text>
+				Seleccionar el conjunto de datos a ponderar.
 
-	<wizard label="Data weighting">
-		<page id="pageData">
-			<text>
-				Select the data frame to weight.
 			</text>
-			<varselector id="selector2" label="Select data frame"/>
-			<varslot id="dataframe" label="Data frame to weight" source="selector2" classes="data.frame" required="true"/>
+			<varselector id="selector2" label="Seleccionar conjunto de datos"/>
+			<varslot id="dataframe" label="Conjunto de datos" source="selector2" classes="data.frame" required="true" />
 		</page>
-		<page id="pageFrequency">
+		<page id="page_frequency">
 			<text>
-				Select the variable that contains the weighting frequencies.
+				Seleccionar la variable que contiene las frecuencias de ponderación. 
+				Debe haber tantas frecuencias como filas tenga el conjunto de datos a ponderar. 
+
 			</text>
-			<copy id="selector"/>
+			<copy id="selector" />
 		</page>
-		<page id="pageSave">
+		<page id="page_new_data">
 			<text>
-				Enter the name for the new data set. By default the new data set is saved in the .GlobalEnv environment.
+				Introducir un nombre para el nuevo conjunto de datos.
+				Por defecto el nuevo conjunto de datos se guarda en el espacio de trabajo global .GlobalEnv.
+
 			</text>
-			<copy id="newDataframe"/>
-			<stretch/>
+			<copy id="save" />
 		</page>
 	</wizard>
 </document>
