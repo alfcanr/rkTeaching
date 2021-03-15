@@ -19,11 +19,11 @@ function calculate() {
     rules = rules.replace(/\n/gi, '; ').replace(/'/g, '"');
     comment("Applying the recoding rules");
     echo(".GlobalEnv$" + save + " <- Recode(" + variable + ", '" + rules + "'");
-    if (asfactor) {
-        echo(", as.factor=TRUE");
-    } else {
-        echo(", as.factor=FALSE");
-    }
+    //if (asfactor) {
+      //  echo(", as.factor=TRUE");
+    //} else {
+      //  echo(", as.factor=FALSE");
+    //}
     echo(")\n");
 }
 
