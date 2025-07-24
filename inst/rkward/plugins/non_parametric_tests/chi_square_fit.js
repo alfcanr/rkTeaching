@@ -35,7 +35,7 @@ function printout() {
 	echo(i18n("Chi statistic") + ' = result$statistic, ');
 	echo(i18n("Degrees of freedom") + ' = result$parameter, ');
 	echo(i18n("p-value") + ' = result$p.value) |>\n');
-	echo('\\tkable("html", align = "c", escape = F) |>\n');
+	echo('\tkable("html", align = "c", escape = F) |>\n');
 	echo('\tkable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)\n');
 	echo(')\n');
 }
