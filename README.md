@@ -31,6 +31,10 @@ install_github("rkward-community/rk.Teaching", ref="develop") # development rele
 ```
 
 You can safely ignore warnings about the (unavailable) package "rkward", it was installed together with RKWard.
+
+### Installation on Windows
+
+There have been reports of problems insalling on windows along side active antivirus software, to avoid that a few binaries have been mamde available through the page: [realeases](https://github.com/AlfCano/rkTeaching/releases/tag/v1.4.0.1)
  
 ## Contributing
 
@@ -44,10 +48,6 @@ for help, reports and requests.
 This plugin is built using the [rkwarddev](https://files.kde.org/rkward/R/pckg/rkwarddev/index.html) package. This means that its development is mainly focussed on one
 script file, located at `rkTeaching/inst/rkward/rkwarddev_plugin_script.R`. This script is written in `R` code and *generates*
 all of the other plugin files when run. Therefore, in case you'd like to add to this plugin, please add to this script file.
-
-### Branches
-
-Please note that all development happens in the `develop` branch. Pull requests against the `master` branch will be rejected, as it is reserved for the current stable release.
 
 ## Licence
 
