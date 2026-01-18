@@ -86,7 +86,7 @@ Description: Basic utilities for teaching statistics.
     - Build probability space
     - Combine probability spaces
     - Repeat probability space
-    - Calculate probability 
+    - Calculate probability
     - Probability distributions
     - Discrete:
     - Binomial
@@ -94,7 +94,7 @@ Description: Basic utilities for teaching statistics.
     - Hypergeometric
     - Poison
     - Continous:
-    - Uniform 
+    - Uniform
     - Normal
     - Chi-square
     - Student T

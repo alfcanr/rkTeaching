@@ -5,14 +5,14 @@ include("../common/filter.js")
 
 // globals
 var dataframe,
-  variables,
-  variablesName,
-  groups,
-  groupsName,
-  getPoints,
-  points,
-  getConfInt,
-  confLevel;
+variables,
+variablesName,
+groups,
+groupsName,
+getPoints,
+points,
+getConfInt,
+confLevel;
 
 function setGlobalVars() {
   variables = getList("variables");
@@ -38,13 +38,16 @@ function calculate() {
   echo('plot <- ' + dataframe + ' |>\n');
   if (grouped) {
     echo('\tmutate(' + groupsName.join(".") + ' = interaction(' + groupsName.join(", ") + ')) |>\n');
-  } 
+  }
   echo('\tpivot_longer(cols = c(' + variablesName.join(", ") + '), names_to = "Variable", values_to = "Value") |>\n');
+
   if (grouped) {
-    echo('\tggplot(aes(x = ' + groupsName.join(".") + ', y = Value, colour = Variable, group = Variable)) +\n');
+    // UPDATED LINE: Changed 'colour = Variable' to 'colour = ' + groupsName.join(".")
+    echo('\tggplot(aes(x = ' + groupsName.join(".") + ', y = Value, colour = ' + groupsName.join(".") + ')) +\n');
   } else {
     echo('\tggplot(aes(x = Variable, y = Value, color = I("#FF9999"))) +\n');
   }
+
   // Set points
   if (getPoints) {
     echo('\tgeom_point(position = position_dodge(0.5)) +\n');
@@ -84,7 +87,7 @@ function doPrintout(full) {
     }
     header.print();
     echo('rk.graph.on()\n');
-    }
+  }
   // Plot
   echo('try ({\n');
   echo('print(plot)\n');
