@@ -6,6 +6,18 @@ It is a plugin package for [RKWard](https://rkward.kde.org), a powerful GUI and 
 and will **only work in conjunction with RKWard**. However, RKWard is free software, please
 [check it out](https://rkward.kde.org).
 
+## Recent Updates & Fixes
+
+This version includes bug fixes and an improvement for the statistical analysis and visualization modules:
+
+### ANOVA of Means
+*   **Post-Hoc Tests Fixed:** Resolved object class errors in pairwise comparisons. The plugin now correctly handles `glht` objects from the `multcomp` package, ensuring that Tukey tests, summaries, and confidence intervals are calculated and displayed correctly.
+*   **Syntax Correction:** Fixed generation errors (trailing commas, stray braces) that previously caused the R code to fail during execution.
+*   **Sphericity Handling:** Improved the robustness of Mauchly's Test reporting and the application of Greenhouse-Geisser/Huynh-Feldt corrections.
+
+### Means Plot
+*   **Improved Visualization:** Updated the `ggplot2` generation logic. The plot now correctly maps colors to the specific grouping variable levels (e.g., subscales/factors) rather than using a generic variable label. This makes interaction plots significantly easier to interpret.
+
 ## Installation
 
 ### Installation via RKWard
@@ -24,13 +36,16 @@ usually no need to restart the application.
 
 To install it directly from GitHub, you can use `install_github()` from the [devtools](https://github.com/hadley/devtools) package:
 
-```
+```r
 library(devtools)
-install_github("rkward-community/rk.Teaching") # stable release
-install_github("rkward-community/rk.Teaching", ref="develop") # development release
+install_github("AlfCano/rkTeaching") # stable release
 ```
 
 You can safely ignore warnings about the (unavailable) package "rkward", it was installed together with RKWard.
+
+### Installation on Windows
+
+There have been reports of problems insalling on windows along side active antivirus software, to avoid that a few binaries have been mamde available through the page: [realeases](https://github.com/AlfCano/rkTeaching/releases/tag/v1.4.0.1)
  
 ## Contributing
 
@@ -45,10 +60,10 @@ This plugin is built using the [rkwarddev](https://files.kde.org/rkward/R/pckg/r
 script file, located at `rkTeaching/inst/rkward/rkwarddev_plugin_script.R`. This script is written in `R` code and *generates*
 all of the other plugin files when run. Therefore, in case you'd like to add to this plugin, please add to this script file.
 
-### Branches
+<<<<<<< HEAD
 
-Please note that all development happens in the `develop` branch. Pull requests against the `master` branch will be rejected, as it is reserved for the current stable release.
-
+=======
+>>>>>>> 5d1ab9de728f399b385307bf2eeea4f7e2dde99f
 ## Licence
 
 Copyright 2012-2017 Alfredo Sánchez Alberca <asalber@ceu.es>
@@ -65,4 +80,5 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with rkTeaching.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> develop
+
+
