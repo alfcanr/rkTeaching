@@ -5,22 +5,22 @@ include("../common/filter.js")
 
 // globals
 var dataframe,
-  design,
-  variable,
-  variableName,
-  within,
-  withinName,
-  between,
-  betweenName,
-  caseId,
-  caseIdName,
-  observed,
-  observedName,
-  showSumSq,
-  sumSqType,
-  heterocedasticity,
-  pairwiseMeans,
-  pairwisePlot;
+design,
+variable,
+variableName,
+within,
+withinName,
+between,
+betweenName,
+caseId,
+caseIdName,
+observed,
+observedName,
+showSumSq,
+sumSqType,
+heterocedasticity,
+pairwiseMeans,
+pairwisePlot;
 
 function setGlobalVars() {
   variable = getString("variable");
@@ -96,11 +96,12 @@ function calculate() {
       echo('pairs <- tidy(TukeyHSD(anova.results[["aov"]])) |>\n');
       echo('\tmutate(conf.int = paste0("(", round(conf.low, 6), " , ", round(conf.high, 6), ")"))\n');
     }
+    // FIX 1: Removed 'tidy()' wrapper. We need the raw glht object for summary, confint and plot to work later.
     if (design == 'within') {
-      echo('pairs <- tidy(glht(lme(' + variableName + '~' + withinName.join("*") + ', data = ' + dataframe + '[!is.na(' + dataframe + '$' + variableName + '),], random = ~1|' + caseIdName + '), linfct = mcp(' + withinName.join("=\"Tukey\",") + '= "Tukey")))\n');
+      echo('pairs <- glht(lme(' + variableName + '~' + withinName.join("*") + ', data = ' + dataframe + '[!is.na(' + dataframe + '$' + variableName + '),], random = ~1|' + caseIdName + '), linfct = mcp(' + withinName.join("=\"Tukey\",") + '= "Tukey"))\n');
     }
     if (design == 'mixed') {
-      echo('pairs <- tidy(glht(lme(' + variableName + '~' + betweenName.join("*") + '*' + withinName.join("*") + ', data = ' + dataframe + '[!is.na(' + dataframe + '$' + variableName + '),], random = ~1|' + caseIdName + '), linfct = mcp(' + betweenName.join("=\"Tukey\",") + '= "Tukey", ' + withinName.join("=\"Tukey\",") + '= "Tukey")))\n');
+      echo('pairs <- glht(lme(' + variableName + '~' + betweenName.join("*") + '*' + withinName.join("*") + ', data = ' + dataframe + '[!is.na(' + dataframe + '$' + variableName + '),], random = ~1|' + caseIdName + '), linfct = mcp(' + betweenName.join("=\"Tukey\",") + '= "Tukey", ' + withinName.join("=\"Tukey\",") + '= "Tukey"))\n');
     }
   }
 }
@@ -138,7 +139,7 @@ function printout() {
   echo(') |>\n');
   echo('\tkable("html", align = "c", escape = FALSE) |>\n');
   echo('\tkable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)\n');
-  echo(')\n'); 
+  echo(')\n');
   // Mauchly's sphericity test (for repeated measures)
   echo("if(\"Mauchly\'s Test for Sphericity\" %in% names(anova.results)){\n");
   echo('\trk.header(' + i18n("Mauchly\'s test for sphericity") + ', level=3)\n');
@@ -149,7 +150,7 @@ function printout() {
   echo(') |>\n');
   echo('\tkable("html", align = "c", escape = FALSE) |>\n');
   echo('\tkable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)\n');
-  echo('\t)\n'); 
+  echo('\t)\n');
   echo('}\n');
   // Sphericity correction
   echo('if("Sphericity Corrections" %in% names(anova.results)){\n');
@@ -163,7 +164,7 @@ function printout() {
   echo(') |>\n');
   echo('\tkable("html", align = "c", escape = FALSE) |>\n');
   echo('\tkable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)\n');
-  echo('\t)\n'); 
+  echo('\t)\n');
   echo('}\n');
   // Levene's test for homogeneity of variance
   echo('if("Levene\'s Test for Homogeneity of Variance" %in% names(anova.results)){\n');
@@ -178,7 +179,7 @@ function printout() {
   echo(') |>\n');
   echo('\tkable("html", align = "c", escape = FALSE) |>\n');
   echo('\tkable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)\n');
-  echo('\t)\n'); 
+  echo('\t)\n');
   echo('}\n');
   // Pairwise means comparison
   if (pairwiseMeans) {
@@ -193,7 +194,7 @@ function printout() {
       echo(') |>\n');
       echo('\tkable("html", align = "c", escape = FALSE) |>\n');
       echo('\tkable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)\n');
-      echo(')\n'); 
+      echo(')\n');
     } else {
       echo('rk.header(' + i18n("Tukey\'s test for pairwise comparison of means") + ', level=4)\n');
       echo('rk.print.literal(tibble(');
@@ -205,18 +206,22 @@ function printout() {
       echo(') |>\n');
       echo('\tkable("html", align = "c", escape = FALSE) |>\n');
       echo('\tkable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)\n');
-      echo('\t)\n'); 
-      echo('}\n');
+      echo('\t)\n');
+
+      // FIX 2: Removed "echo('}\n');" here. This was inserting a stray "}" in the R code.
+
       echo('rk.header(' + i18n("Confidence intervals for the difference of means") + ', level=4)\n');
       echo('rk.print.literal(tibble(');
       echo(i18n("Pairs") + ' = rownames(confint(pairs)$confint), ');
       echo(i18n("Estimate") + ' = confint(pairs)$confint[,1], ');
-      echo(i18n("Confidence interval<br>difference between means") + ' = pairs$conf.int, ');
+      // FIX 3: Removed trailing comma below and fixed object access (confint(pairs)$confint)
+      echo(i18n("Confidence interval<br>difference between means") + ' = paste0("(", round(confint(pairs)$confint[,2], 6), " , ", round(confint(pairs)$confint[,3], 6), ")")');
       echo(') |>\n');
       echo('\tkable("html", align = "c", escape = FALSE) |>\n');
       echo('\tkable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)\n');
-      echo('\t)\n'); 
-      echo('}\n');
+      echo('\t)\n');
+
+      // FIX 4: Removed "echo('}\n');" here. Another stray brace.
     }
   }
   // Pairwise means plot
@@ -228,3 +233,4 @@ function printout() {
     echo('rk.graph.off()\n');
   }
 }
+
