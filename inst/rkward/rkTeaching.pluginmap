@@ -4,7 +4,7 @@
 	<about
 		name="rkTeaching"
 		shortinfo="RKWard GUI that introduces some utilities for teaching Statistic."
-		version="1.3.0"
+		version="1.4.0.1"
 		releasedate="2020-09-01"
 		url="https://aprendeconalf.es/en/project/rkteaching/"
 		license="GPL (&gt;= 3)">
